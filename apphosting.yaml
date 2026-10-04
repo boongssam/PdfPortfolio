@@ -1,0 +1,33 @@
+# Firebase App Hosting 설정 (https://firebase.google.com/docs/app-hosting/configure)
+runConfig:
+  minInstances: 0
+  maxInstances: 2
+
+env:
+  # Firebase 웹 앱 설정값 (콘솔 > 프로젝트 설정 > 내 앱). 공개되어도 되는 값입니다.
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: YOUR_API_KEY
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: YOUR_PROJECT_ID.firebaseapp.com
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: YOUR_PROJECT_ID
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: YOUR_APP_ID
+    availability: [BUILD, RUNTIME]
+
+  # Gemini 모델 (선택). 기본값: gemini-flash-latest
+  # - variable: GEMINI_MODEL
+  #   value: gemini-3.8-flash
+
+  # 사용 가능한 Google 계정 제한 (선택, 쉼표로 구분)
+  # - variable: ALLOWED_EMAILS
+  #   value: boongssam@gmail.com
+
+  # Gemini API 키는 Secret Manager에 저장합니다:
+  #   firebase apphosting:secrets:set gemini-api-key
+  - variable: GEMINI_API_KEY
+    secret: gemini-api-key
+    availability: [RUNTIME]
