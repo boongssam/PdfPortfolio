@@ -1,17 +1,11 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 허용된 Google 계정만 사용할 수 있습니다. 계정을 추가하려면 목록에 이메일을 넣고
-    // apphosting.yaml 의 ALLOWED_EMAILS 에도 같이 추가한 뒤 `firebase deploy --only firestore` 하세요.
-    function isAllowedUser() {
-      return request.auth != null
-        && request.auth.token.email_verified == true
-        && request.auth.token.email.lower() in ['boongssam@gmail.com'];
-    }
-
+    // 로그인 가능한 계정은 Firebase 콘솔 > Authentication > 사용자 목록으로 관리합니다.
+    // (Authentication > 설정 > 사용자 작업 에서 "만들기(가입)"를 꺼서 새 계정 자동 가입을 막아 둡니다)
     // 각 선생님은 자기 users/{uid} 아래 데이터만 읽고 쓸 수 있습니다.
     match /users/{uid}/{document=**} {
-      allow read, write: if isAllowedUser() && request.auth.uid == uid;
+      allow read, write: if request.auth != null && request.auth.uid == uid;
     }
   }
 }

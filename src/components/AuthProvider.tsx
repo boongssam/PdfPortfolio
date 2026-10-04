@@ -13,14 +13,15 @@ interface AuthState {
 
 const AuthContext = createContext<AuthState | null>(null);
 
-// 서버의 허용 계정 목록(ALLOWED_EMAILS)에 있는지 확인. 403일 때만 거부하고, 네트워크 오류 등은 통과시킵니다.
-async function isAllowed(user: User): Promise<boolean> {
-  try {
-    const res = await fetch("/api/me", { headers: { Authorization: `Bearer ${await user.getIdToken()}` } });
-    return res.status !== 403;
-  } catch {
-    return true;
-  }
+// Firebase 로그인 오류 코드를 선생님이 이해할 수 있는 문장으로 바꿉니다.
+function loginErrorMessage(e: unknown): string {
+  const code = (e as { code?: string }).code ?? "";
+  if (code === "auth/admin-restricted-operation")
+    return "등록되지 않은 계정입니다. 관리자에게 Authentication 사용자 등록을 요청하세요.";
+  if (code === "auth/user-disabled") return "사용이 중지된 계정입니다.";
+  if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") return "";
+  if (code === "auth/popup-blocked") return "팝업이 차단되었습니다. 브라우저에서 팝업을 허용해 주세요.";
+  return (e as Error).message;
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -29,12 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(
     () =>
-      onAuthStateChanged(firebaseAuth(), async (u) => {
-        if (u && !(await isAllowed(u))) {
-          await signOut(firebaseAuth());
-          alert(`${u.email} 계정은 이 앱을 사용할 수 없습니다.`);
-          return; // signOut이 이 콜백을 다시 호출합니다(u = null).
-        }
+      onAuthStateChanged(firebaseAuth(), (u) => {
         setUser(u);
         setLoading(false);
       }),
@@ -42,7 +38,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const login = async () => {
-    await signInWithPopup(firebaseAuth(), new GoogleAuthProvider());
+    try {
+      await signInWithPopup(firebaseAuth(), new GoogleAuthProvider());
+    } catch (e) {
+      const message = loginErrorMessage(e);
+      if (message) throw new Error(message);
+    }
   };
   const logout = () => signOut(firebaseAuth());
 

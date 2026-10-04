@@ -22,10 +22,6 @@ env:
   # - variable: GEMINI_MODEL
   #   value: gemini-3.8-flash
 
-  # 사용 가능한 Google 계정 제한 (선택, 쉼표로 구분)
-  - variable: ALLOWED_EMAILS
-    value: boongssam@gmail.com
-    availability: [RUNTIME]
 
   # Gemini API 키는 Secret Manager에 저장합니다:
   #   firebase apphosting:secrets:set gemini-api-key
