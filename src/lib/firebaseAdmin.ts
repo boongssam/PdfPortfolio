@@ -34,7 +34,10 @@ export async function verifyRequest(req: Request): Promise<DecodedIdToken> {
     throw new AuthError("로그인 정보가 유효하지 않습니다. 다시 로그인해 주세요.", 401);
   }
 
-  if (allowedEmails.length > 0 && !allowedEmails.includes((decoded.email ?? "").toLowerCase())) {
+  if (
+    allowedEmails.length > 0 &&
+    !(decoded.email_verified && allowedEmails.includes((decoded.email ?? "").toLowerCase()))
+  ) {
     throw new AuthError("이 계정은 사용 권한이 없습니다.", 403);
   }
   return decoded;
