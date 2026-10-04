@@ -6,16 +6,16 @@ runConfig:
 env:
   # Firebase 웹 앱 설정값 (콘솔 > 프로젝트 설정 > 내 앱). 공개되어도 되는 값입니다.
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: YOUR_API_KEY
+    value: AIzaSyBgBsYTiDhmVaQmHeq7lb5DhRjARvpsXvg
     availability: [BUILD, RUNTIME]
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-    value: YOUR_PROJECT_ID.firebaseapp.com
+    value: pdf-porfolio.firebaseapp.com
     availability: [BUILD, RUNTIME]
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
-    value: YOUR_PROJECT_ID
+    value: pdf-porfolio
     availability: [BUILD, RUNTIME]
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
-    value: YOUR_APP_ID
+    value: "1:971062946838:web:4992300fdf15c04b93d937"
     availability: [BUILD, RUNTIME]
 
   # Gemini 모델 (선택). 기본값: gemini-flash-latest
